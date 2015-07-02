@@ -417,6 +417,12 @@ func (scope *Scope) generateSqlTag(field *StructField) string {
 			autoIncrease = true
 		}
 
+		gormSettings := parseTagSetting(field.Tag.Get("gorm"))
+		_, composite := gormSettings["COMPOSITE"]
+		if composite {
+			autoIncrease = false
+		}
+
 		sqlType = scope.Dialect().SqlTag(reflectValue, size, autoIncrease)
 	}
 
